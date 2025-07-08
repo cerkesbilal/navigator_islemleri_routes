@@ -22,6 +22,50 @@
    Eğer bu rotada herhangi bir yanlış yol olursa çalışan özel bir parametre vardır bu da materialApp içerisindedir routes ın bittiği yere şunu tanımlıyoruz tabi daha öncesinde bir hata sayfası oluşturduk:
 
     onUnknownRoute: (settings) =>
-          MaterialPageRoute(builder: (context) => HataSayfasi()),      
+          MaterialPageRoute(builder: (context) => HataSayfasi()), 
+
+  On Generate  Route:
+  ------------------------
+  -Yine Materialapp içerisinde bulunur. onGenerateRoute:  adında bir parametresi vardır.     
+  -Bunun önceki konudan farkı sadece sayfa açma işlemini değil aynı zamanda veri aktarımı yapmak içinde kullanılabildiği için daha fazla işimize yarar.
+  -Ben MaterialApp in içini doldurmak istemiyorum. O yüzden farklı bir dosya oluşturup orda bu işlemi tanımlayıp materialApp de çağırıcam.
+
+
+  -Öncelikle route_generator.dart adında bir dosya oluşturalım.:
+
+  class RouteGenerator {
+  static Route<dynamic>? routeGenerator(RouteSettings settings) {
+    switch (settings.name) {
+      case "/":
+        return MaterialPageRoute(builder: (context) => RedPage());
+
+      case "/yellowPage":
+        return MaterialPageRoute(builder: (context) => YellowPage());
+
+      case "/greenPage":
+        return MaterialPageRoute(builder: (context) => GreenPage());
+
+      default:
+        return MaterialPageRoute(builder: (context) => HataSayfasi());
+    }
+  }
+}
+
+Materialapp de onGenereted olan yere şu şekilde çağırıyoruz:
+
+onGenerateRoute: RouteGenerator.routeGenerator,
+
+-OnGenerateRoute ile kurucu yardımıyla veri Gönderme-
+
+1)Sayfaya gidecek olan butonun olduğu sayfada veri oluşturulur. 
+2)Verinin gideceği sayfada kurucusunda alınacak veri için hazırlık yapılır. 
+3)Rota yönetiminin olduğu sayfada (route_generator) veri verinin gideceği sayfaya gönderilir. 
+  String name = settings.arguments as String;
+        return MaterialPageRoute(builder: (context) => GreenPage(ad: name));
+
+ 4)Anasayfadaki veriyi gönderen butona şu yazılır:
+  Navigator.of(context).pushNamed("/greenPage", arguments: name);
+
+Sonuç olarak veri gönderimi tamamlanır.         
 
 */
